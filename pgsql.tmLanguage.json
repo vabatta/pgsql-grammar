@@ -1,0 +1,1043 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "version": "18.0.0",
+  "fileTypes": [
+    "pgsql",
+    "psql"
+  ],
+  "foldingStartMarker": "\\s*\\(\\s*$",
+  "foldingStopMarker": "^\\s*\\)",
+  "name": "SQL (PostgreSQL 18)",
+  "scopeName": "source.pgsql",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#create_function"
+    },
+    {
+      "include": "#create_table"
+    },
+    {
+      "include": "#create_other"
+    },
+    {
+      "include": "#dml_statement"
+    },
+    {
+      "include": "#general_statement"
+    },
+    {
+      "include": "#psql_directive"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "match": "(--).*$\\n?",
+          "name": "comment.line.double-dash.pgsql",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.pgsql"
+            }
+          }
+        },
+        {
+          "begin": "/\\*",
+          "end": "\\*/",
+          "name": "comment.block.c",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.pgsql"
+            }
+          }
+        }
+      ]
+    },
+    "create_function": {
+      "begin": "(?i)^\\s*(create)\\s+(or\\s+replace\\s+)?(function|procedure)\\s+((?:(?:[\\w]+|\".+\")\\.)?(?:[\\w]+|\".+\"))",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "2": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "3": {
+          "name": "keyword.ddl.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql.create",
+      "patterns": [
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "create_table": {
+      "begin": "(?i)^\\s*(create)\\s+((?:foreign\\s+|(?:global\\s+|local\\s+)?(?:temp\\s+|temporary\\s+|unlogged\\s+)?)table)\\s+(if\\s+not\\s+exists\\s+)?((?:(?:[\\w]+|\".+\")\\.)?(?:[\\w]+|\".+\"))",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "2": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "3": {
+          "name": "keyword.ddl.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql.create",
+      "patterns": [
+        {
+          "include": "#create_table_columns"
+        },
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "create_table_columns": {
+      "comment": "Column definitions inside CREATE TABLE",
+      "begin": "(?i)(?:(?<=\\(|,)|^)\\s*(?!(?:PRIMARY|UNIQUE|CHECK|CONSTRAINT|FOREIGN|EXCLUDE|LIKE|FOR|PARTITION|AS|INHERITS|WITH|WITHOUT|SET|ENABLE|DISABLE|OWNER|ATTACH|DETACH|MODULUS|REMAINDER)\\b)([a-zA-Z_][a-zA-Z0-9_]*)",
+      "end": "(?=,|\\)|;)",
+      "patterns": [
+        {
+          "include": "#paren_group"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "create_other": {
+      "begin": "(?i)(?:^\\s*(create)\\s+(or\\s+replace\\s+)?(text\\s+search\\s+(?:configuration|dictionary|parser|template)|access\\s+method|foreign\\s+data\\s+wrapper|user\\s+mapping|aggregate|collation|conversion|database|domain|event\\s+trigger|extension|group|(?:unique\\s+)?index|language|operator\\s+(?:class|family)|operator|policy|publication|role|rule|schema|sequence|server|statistics|subscription|(?:global\\s+|local\\s+)?(?:temp\\s+|temporary\\s+|unlogged\\s+)?table|tablespace|transform|trigger|type|user|(?:materialized\\s+)?view)\\s+)(concurrently\\s+)?(if\\s+not\\s+exists\\s+)?((?:(?:[\\w]+|\".+\")\\.)?(?:[\\w]+|\".+\"))",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "2": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "3": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "4": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "5": {
+          "name": "keyword.ddl.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql.create",
+      "patterns": [
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "dml_statement": {
+      "comment": "DML statements — excludes keyword_ddl to avoid false positives on column names like data, value, mode, level",
+      "begin": "(?i)^\\s*(select|insert|update|delete|merge|with|truncate|copy|values|explain|vacuum|analyze|do|call)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql",
+      "patterns": [
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_function"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keyword_dml"
+        },
+        {
+          "include": "#keyword_control"
+        },
+        {
+          "include": "#keyword_other"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "general_statement": {
+      "begin": "(^\\s*[a-zA-Z]+)",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.other.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql",
+      "patterns": [
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_function"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "psql_directive": {
+      "begin": "^(\\\\[\\S]+)",
+      "beginCaptures": {
+        "0": {
+          "name": "meta.preprocessor.pgsql"
+        }
+      },
+      "end": "\\n",
+      "name": "meta.statement.pgsql.psql"
+    },
+    "dollar_quotes": {
+      "comment": "Dollar-quoted body — treated as SQL/PL body with syntax highlighting",
+      "begin": "(\\$[\\w_0-9]*\\$)",
+      "beginCaptures": {
+        "1": {
+          "name": "string.unquoted.dollar.pgsql"
+        }
+      },
+      "end": "(\\1)",
+      "endCaptures": {
+        "1": {
+          "name": "string.unquoted.dollar.pgsql"
+        }
+      },
+      "name": "meta.dollar-quote.pgsql",
+      "patterns": [
+        {
+          "include": "#plpgsql_declare"
+        },
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_function"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "plpgsql_declare": {
+      "comment": "DECLARE block in PL/pgSQL — types are valid for variable declarations",
+      "begin": "(?i)\\b(declare)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.pgsql"
+        }
+      },
+      "end": "(?i)(?=\\bbegin\\b)",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#type_literal"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "comment": "E-string with backslash escapes (E'...')",
+          "begin": "[eE]'",
+          "end": "'(?!')",
+          "name": "string.quoted.single.pgsql",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.pgsql"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.pgsql"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.pgsql"
+            },
+            {
+              "match": "''",
+              "name": "constant.character.escape.pgsql"
+            }
+          ]
+        },
+        {
+          "comment": "Fast single-line string (no embedded quotes)",
+          "match": "(')[^']*(')",
+          "name": "string.quoted.single.pgsql",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.string.begin.pgsql"
+            },
+            "2": {
+              "name": "punctuation.definition.string.end.pgsql"
+            }
+          }
+        },
+        {
+          "comment": "Regular string — '' is the only escape (no backslash escapes)",
+          "begin": "'",
+          "end": "'(?!')",
+          "name": "string.quoted.single.pgsql",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.pgsql"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.pgsql"
+            }
+          },
+          "patterns": [
+            {
+              "match": "''",
+              "name": "constant.character.escape.pgsql"
+            }
+          ]
+        },
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "variable.other.pgsql",
+          "comment": "Double-quoted identifiers",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.identifier.begin.pgsql"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.identifier.end.pgsql"
+            }
+          }
+        },
+        {
+          "begin": "(\\$[\\w_0-9]*\\$)",
+          "end": "\\1",
+          "name": "string.unquoted.dollar.pgsql",
+          "comment": "Inline dollar quote — treated as string"
+        }
+      ]
+    },
+    "string_escape": {
+      "comment": "Only used by E-strings; regular PG strings use '' not backslash",
+      "match": "\\\\.",
+      "name": "constant.character.escape.pgsql"
+    },
+    "storage_types": {
+      "match": "(?xi)\\b(timestamp\\s+with\\s+time\\s+zone|timestamp\\s+without\\s+time\\s+zone|time\\s+with\\s+time\\s+zone|time\\s+without\\s+time\\s+zone|double\\s+precision|character\\s+varying|bit\\s+varying|smallint|integer|bigint|int|int2|int4|int8|smallserial|serial|bigserial|serial2|serial4|serial8|numeric|decimal|real|float|float4|float8|money|boolean|bool|character|varchar|char|bpchar|text|name|bytea|timestamp|timestamptz|date|time|timetz|interval|point|line|lseg|box|path|polygon|circle|cidr|inet|macaddr|macaddr8|bit|varbit|tsvector|tsquery|json|jsonb|jsonpath|uuid|xml|int4range|int8range|numrange|tsrange|tstzrange|daterange|int4multirange|int8multirange|nummultirange|tsmultirange|tstzmultirange|datemultirange|pg_lsn|pg_snapshot|txid_snapshot|oid|regclass|regcollation|regconfig|regdictionary|regnamespace|regoper|regoperator|regproc|regprocedure|regrole|regtype|xid|xid8|cid|tid|record|void|trigger|event_trigger|refcursor|setof|array|anyelement|anyarray|anynonarray|anyenum|anyrange|anymultirange|anycompatible|anycompatiblearray|anycompatiblenonarray|anycompatiblerange|anycompatiblemultirange|double|precision|varying)\\b",
+      "name": "entity.name.tag.pgsql"
+    },
+    "cast_type": {
+      "comment": "Type name after :: cast operator",
+      "match": "(?xi)(::)\\s*(timestamp\\s+with\\s+time\\s+zone|timestamp\\s+without\\s+time\\s+zone|time\\s+with\\s+time\\s+zone|time\\s+without\\s+time\\s+zone|double\\s+precision|character\\s+varying|bit\\s+varying|smallint|integer|bigint|int|int2|int4|int8|smallserial|serial|bigserial|serial2|serial4|serial8|numeric|decimal|real|float|float4|float8|money|boolean|bool|character|varchar|char|bpchar|text|name|bytea|timestamp|timestamptz|date|time|timetz|interval|point|line|lseg|box|path|polygon|circle|cidr|inet|macaddr|macaddr8|bit|varbit|tsvector|tsquery|json|jsonb|jsonpath|uuid|xml|int4range|int8range|numrange|tsrange|tstzrange|daterange|int4multirange|int8multirange|nummultirange|tsmultirange|tstzmultirange|datemultirange|pg_lsn|pg_snapshot|txid_snapshot|oid|regclass|regcollation|regconfig|regdictionary|regnamespace|regoper|regoperator|regproc|regprocedure|regrole|regtype|xid|xid8|cid|tid|record|void|trigger|event_trigger|refcursor|setof|array|anyelement|anyarray|anynonarray|anyenum|anyrange|anymultirange|anycompatible|anycompatiblearray|anycompatiblenonarray|anycompatiblerange|anycompatiblemultirange|double|precision|varying)\\b",
+      "captures": {
+        "1": {
+          "name": "keyword.operator.cast.pgsql"
+        },
+        "2": {
+          "name": "entity.name.tag.pgsql"
+        }
+      }
+    },
+    "type_literal": {
+      "comment": "Type name before a string literal (e.g. DATE '2024-01-01', INTERVAL '1 day')",
+      "match": "(?xi)\\b(timestamp\\s+with\\s+time\\s+zone|timestamp\\s+without\\s+time\\s+zone|time\\s+with\\s+time\\s+zone|time\\s+without\\s+time\\s+zone|double\\s+precision|character\\s+varying|bit\\s+varying|smallint|integer|bigint|int|int2|int4|int8|smallserial|serial|bigserial|serial2|serial4|serial8|numeric|decimal|real|float|float4|float8|money|boolean|bool|character|varchar|char|bpchar|text|name|bytea|timestamp|timestamptz|date|time|timetz|interval|point|line|lseg|box|path|polygon|circle|cidr|inet|macaddr|macaddr8|bit|varbit|tsvector|tsquery|json|jsonb|jsonpath|uuid|xml|int4range|int8range|numrange|tsrange|tstzrange|daterange|int4multirange|int8multirange|nummultirange|tsmultirange|tstzmultirange|datemultirange|pg_lsn|pg_snapshot|txid_snapshot|oid|regclass|regcollation|regconfig|regdictionary|regnamespace|regoper|regoperator|regproc|regprocedure|regrole|regtype|xid|xid8|cid|tid|record|void|trigger|event_trigger|refcursor|setof|array|anyelement|anyarray|anynonarray|anyenum|anyrange|anymultirange|anycompatible|anycompatiblearray|anycompatiblenonarray|anycompatiblerange|anycompatiblemultirange|double|precision|varying)(?=\\s*')",
+      "name": "entity.name.tag.pgsql"
+    },
+    "cast_function": {
+      "comment": "CAST(expr AS type) — highlights type inside CAST",
+      "begin": "(?xi)\\b(cast)\\s*(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "support.function.pgsql"
+        },
+        "2": {
+          "name": "punctuation.definition.group.begin.pgsql"
+        }
+      },
+      "end": "(\\))",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.group.end.pgsql"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#paren_group"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "extract_function": {
+      "comment": "EXTRACT(field FROM expr) — highlights date/time field names",
+      "begin": "(?xi)\\b(extract)\\s*(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "support.function.pgsql"
+        },
+        "2": {
+          "name": "punctuation.definition.group.begin.pgsql"
+        }
+      },
+      "end": "(\\))",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.group.end.pgsql"
+        }
+      },
+      "patterns": [
+        {
+          "match": "(?xi)\\b(century|day|decade|dow|doy|epoch|hour|isodow|isoyear|julian|microseconds|millennium|milliseconds|minute|month|quarter|second|timezone_hour|timezone_minute|timezone|week|year)\\b",
+          "name": "entity.name.label.pgsql"
+        },
+        {
+          "include": "#paren_group"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "xml_function": {
+      "comment": "xmlelement(NAME ...), xmlpi(NAME ...), xmlroot(... VERSION ...) — highlights NAME/VERSION keywords",
+      "begin": "(?xi)\\b(xmlelement|xmlpi|xmlroot)\\s*(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "support.function.pgsql"
+        },
+        "2": {
+          "name": "punctuation.definition.group.begin.pgsql"
+        }
+      },
+      "end": "(\\))",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.group.end.pgsql"
+        }
+      },
+      "patterns": [
+        {
+          "match": "(?xi)\\b(name|version)\\b",
+          "name": "keyword.other.pgsql"
+        },
+        {
+          "include": "#paren_group"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "paren_group": {
+      "comment": "Nested parentheses — no storage_types to avoid false positives in expressions",
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#paren_group"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#extract_function"
+        },
+        {
+          "include": "#xml_function"
+        },
+        {
+          "include": "#support_functions"
+        },
+        {
+          "include": "#support_constants"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "support_functions": {
+      "match": "(?xi)\\b(any_value|array_agg|avg|bit_and|bit_or|bit_xor|bool_and|bool_or|count|every|json_agg|jsonb_agg|json_agg_strict|jsonb_agg_strict|json_object_agg|jsonb_object_agg|json_object_agg_strict|jsonb_object_agg_strict|max|min|range_agg|range_intersect_agg|string_agg|sum|xmlagg|corr|covar_pop|covar_samp|regr_avgx|regr_avgy|regr_count|regr_intercept|regr_r2|regr_slope|regr_sxx|regr_sxy|regr_syy|stddev|stddev_pop|stddev_samp|variance|var_pop|var_samp|mode|percentile_cont|percentile_disc|grouping|row_number|rank|dense_rank|percent_rank|cume_dist|ntile|lag|lead|first_value|last_value|nth_value|ascii|btrim|char_length|character_length|chr|concat|concat_ws|format|initcap|casefold|left|length|lower|lpad|ltrim|md5|normalize|octet_length|overlay|parse_ident|position|quote_ident|quote_literal|quote_nullable|regexp_count|regexp_instr|regexp_like|regexp_match|regexp_matches|regexp_replace|regexp_split_to_array|regexp_split_to_table|regexp_substr|repeat|replace|reverse|right|rpad|rtrim|split_part|starts_with|string_to_array|string_to_table|strpos|substr|substring|to_ascii|to_hex|to_oct|to_bin|translate|trim|unicode_assigned|unistr|upper|abs|cbrt|ceil|ceiling|degrees|div|erf|erfc|exp|factorial|floor|gamma|gcd|lcm|lgamma|ln|log|log10|min_scale|mod|pi|power|radians|random|random_normal|round|scale|sign|sqrt|setseed|trim_scale|trunc|width_bucket|acos|acosd|asin|asind|atan|atand|atan2|atan2d|cos|cosd|cot|cotd|sin|sind|tan|tand|sinh|cosh|tanh|asinh|acosh|atanh|age|clock_timestamp|date_add|date_bin|date_part|date_subtract|date_trunc|extract|isfinite|justify_days|justify_hours|justify_interval|make_date|make_interval|make_time|make_timestamp|make_timestamptz|now|statement_timestamp|timeofday|to_timestamp|transaction_timestamp|pg_sleep|pg_sleep_for|pg_sleep_until|timezone|to_json|to_jsonb|array_to_json|row_to_json|json_build_array|jsonb_build_array|json_build_object|jsonb_build_object|json_object|jsonb_object|json_array|json_scalar|json_serialize|json_array_elements|jsonb_array_elements|json_array_elements_text|jsonb_array_elements_text|json_array_length|jsonb_array_length|json_each|jsonb_each|json_each_text|jsonb_each_text|json_extract_path|jsonb_extract_path|json_extract_path_text|jsonb_extract_path_text|json_object_keys|jsonb_object_keys|json_populate_record|jsonb_populate_record|jsonb_populate_record_valid|json_populate_recordset|jsonb_populate_recordset|json_to_record|jsonb_to_record|json_to_recordset|jsonb_to_recordset|jsonb_set|jsonb_set_lax|jsonb_insert|json_strip_nulls|jsonb_strip_nulls|jsonb_path_exists|jsonb_path_match|jsonb_path_query|jsonb_path_query_array|jsonb_path_query_first|jsonb_path_exists_tz|jsonb_path_match_tz|jsonb_path_query_tz|jsonb_path_query_array_tz|jsonb_path_query_first_tz|jsonb_pretty|json_typeof|jsonb_typeof|array_append|array_cat|array_dims|array_fill|array_length|array_lower|array_ndims|array_position|array_positions|array_prepend|array_remove|array_replace|array_reverse|array_sample|array_shuffle|array_sort|array_to_string|array_upper|cardinality|trim_array|unnest|generate_series|generate_subscripts|nextval|currval|setval|lastval|coalesce|nullif|greatest|least|to_char|to_date|to_number|abbrev|broadcast|family|host|hostmask|inet_merge|inet_same_family|masklen|netmask|network|set_masklen|macaddr8_set7bit|array_to_tsvector|get_current_ts_config|numnode|plainto_tsquery|phraseto_tsquery|websearch_to_tsquery|querytree|setweight|strip|to_tsquery|to_tsvector|json_to_tsvector|jsonb_to_tsvector|ts_delete|ts_filter|ts_headline|ts_rank|ts_rank_cd|ts_rewrite|tsquery_phrase|tsvector_to_array|ts_debug|ts_lexize|ts_parse|ts_token_type|ts_stat|gen_random_uuid|uuidv4|uuidv7|uuid_extract_timestamp|uuid_extract_version|enum_first|enum_last|enum_range|lower|upper|isempty|lower_inc|upper_inc|lower_inf|upper_inf|range_merge|multirange|bit_count|bit_length|crc32|crc32c|get_bit|get_byte|set_bit|set_byte|sha224|sha256|sha384|sha512|convert|convert_from|convert_to|encode|decode|xmlattributes|xmlcomment|xmlconcat|xmlelement|xmlforest|xmlpi|xmlroot|xmlexists|xmltext|xml_is_well_formed|xml_is_well_formed_document|xml_is_well_formed_content|xpath|xpath_exists|xmltable|table_to_xml|query_to_xml|num_nonnulls|num_nulls|current_setting|set_config|pg_cancel_backend|pg_terminate_backend|pg_reload_conf|pg_typeof|pg_notify|pg_column_size|pg_column_compression|pg_database_size|pg_relation_size|pg_size_pretty|pg_size_bytes|pg_table_size|pg_tablespace_size|pg_total_relation_size|pg_indexes_size|pg_backend_pid|pg_blocking_pids|pg_advisory_lock|pg_advisory_lock_shared|pg_advisory_unlock|pg_advisory_unlock_all|pg_advisory_unlock_shared|pg_advisory_xact_lock|pg_advisory_xact_lock_shared|pg_try_advisory_lock|pg_try_advisory_lock_shared|pg_try_advisory_xact_lock|pg_try_advisory_xact_lock_shared|pg_export_snapshot|pg_partition_tree|pg_partition_ancestors|pg_partition_root|format_type|pg_get_constraintdef|pg_get_expr|pg_get_functiondef|pg_get_function_arguments|pg_get_function_result|pg_get_indexdef|pg_get_serial_sequence|pg_get_viewdef|pg_get_keywords|pg_input_is_valid|pg_input_error_info|col_description|obj_description|shobj_description|version|pg_is_in_recovery|pg_current_wal_lsn|pg_wal_lsn_diff|pg_relation_filenode|pg_relation_filepath|area|center|diagonal|diameter|height|isclosed|isopen|npoints|pclose|popen|radius|slope|width|bound_box|suppress_redundant_updates_trigger|tsvector_update_trigger|tsvector_update_trigger_column|bernoulli|system|pg_restore_relation_stats|pg_restore_attribute_stats|pg_clear_relation_stats|pg_clear_attribute_stats|pg_get_acl|has_largeobject_privilege|pg_stat_get_backend_io|pg_stat_reset_backend_stats|pg_stat_get_backend_wal|pg_ls_summariesdir|pg_numa_available|pg_get_loaded_modules)\\s*(?=\\()",
+      "name": "support.function.pgsql"
+    },
+    "support_constants": {
+      "match": "(?xi)\\b(current_catalog|current_date|current_role|current_schema|current_time|current_timestamp|current_user|localtime|localtimestamp|session_user|system_user|tg_op|tg_table_name|tg_table_schema|tg_name|tg_when|tg_level|tg_relid|tg_relname|tg_tag|tg_nargs|tg_argv|tg_event|sqlstate|sqlerrm|row_count|pg_context|pg_routine_oid|result_oid|returned_sqlstate|message_text|pg_exception_detail|pg_exception_hint|pg_exception_context|pg_datatype_name)\\b",
+      "name": "support.function.pgsql"
+    },
+    "keywords_all": {
+      "patterns": [
+        {
+          "include": "#keyword_dml"
+        },
+        {
+          "include": "#keyword_ddl"
+        },
+        {
+          "include": "#keyword_control"
+        },
+        {
+          "include": "#keyword_other"
+        }
+      ]
+    },
+    "keyword_dml": {
+      "match": "(?xi)\\b(default\\s+values|on\\s+conflict|do\\s+nothing|do\\s+update|select|insert|update|delete|merge|returning|truncate|copy|values|set|matched|conflict)\\b",
+      "name": "keyword.dml.pgsql"
+    },
+    "keyword_ddl": {
+      "match": "(?xi)\\b(text\\s+search|row\\s+level\\s+security|or\\s+replace|if\\s+not\\s+exists|if\\s+exists|not\\s+null|not\\s+enforced|without\\s+overlaps|comment\\s+on|with\\s+data|no\\s+data|for\\s+each\\s+row|for\\s+each\\s+statement|execute\\s+function|execute\\s+procedure|event\\s+trigger|access\\s+method|returns\\s+null\\s+on\\s+null\\s+input|called\\s+on\\s+null\\s+input|parallel\\s+restricted|parallel\\s+unsafe|parallel\\s+safe|security\\s+invoker|security\\s+definer|create|alter|drop|add|rename|cascade|restrict|column|constraint|default|references|primary|unique|foreign|key|check|exclude|using|concurrently|materialized|unlogged|temporary|temp|inherits|inherit|refresh|reindex|returns|replace|include|including|attach|detach|enable|disable|generated|always|identity|logged|stored|privileges|grant|revoke|reassign|owned|owner|rule|policy|publication|subscription|tablespace|statistics|aggregate|collation|conversion|extension|mapping|server|wrapper|index|table|view|schema|sequence|database|function|procedure|trigger|type|domain|enum|role|language|volatile|stable|immutable|strict|security|definer|invoker|called|leakproof|parallel|cost|support|variadic|inout|out|encoding|operator|data|force|value|location|option|options|sfunc|stype|initcond|start|increment|maxvalue|minvalue|cache|usage|tables|sequences|plans|buffers|access|exclusive|mode|level|partition|virtual|enforced|split|partitions|action|collate|storage|compression|match|simple|partial|hash|list|plain|external|extended|main|validate|cluster|replica|excluding|modulus|remainder|expression|finalize|none|authorization|version|cascaded|connection|connect|maintain|routine|parameter|granted|admin|permissive|restrictive|label|procedural|import|transform|atomic|constant|attributes|family|configuration|dictionary|parser|template|subtype_opclass|subtype_diff|multirange_type_name|subtype|canonical|internallength|passedbyvalue|typmod_in|typmod_out|subscript|alignment|category|preferred|element|collatable|input|output|receive|send|variable|finalfunc_extra|finalfunc_modify|finalfunc|combinefunc|serialfunc|deserialfunc|msfunc|minvfunc|mstype|msspace|mfinalfunc_extra|mfinalfunc_modify|mfinalfunc|minitcond|sortop|hypothetical|basetype|read_only|shareable|read_write|sspace|text|without|comment|statement|event|method|restricted|unsafe|safe)\\b",
+      "name": "keyword.ddl.pgsql"
+    },
+    "keyword_control": {
+      "match": "(?xi)\\b(for\\s+no\\s+key\\s+update|for\\s+key\\s+share|for\\s+update|for\\s+share|return\\s+query|return\\s+next|get\\s+(?:stacked\\s+)?diagnostics|into\\s+strict|begin|end|declare|loop|while|for|foreach|if|then|elsif|elseif|else|exit|continue|exception|when|raise|notice|warning|info|debug|log|perform|return|execute|call|case|commit|rollback|savepoint|release|open|close|fetch|move|found|assert|alias|message|detail|hint|errcode|datatype|chain|query|get|stacked|diagnostics)\\b",
+      "name": "keyword.control.pgsql"
+    },
+    "keyword_other": {
+      "match": "(?xi)\\b(wait\\s+for|large\\s+objects|reject_limit|respect\\s+nulls|ignore\\s+nulls|is\\s+not\\s+distinct\\s+from|is\\s+not\\s+(?:nfc|nfd|nfkc|nfkd)\\s+normalized|is\\s+distinct\\s+from|is\\s+not\\s+normalized|is\\s+not\\s+null|is\\s+(?:nfc|nfd|nfkc|nfkd)\\s+normalized|at\\s+time\\s+zone|left\\s+outer\\s+join|right\\s+outer\\s+join|full\\s+outer\\s+join|is\\s+normalized|is\\s+null|skip\\s+locked|between\\s+symmetric|similar\\s+to|inner\\s+join|cross\\s+join|natural\\s+join|left\\s+join|right\\s+join|full\\s+join|group\\s+by|order\\s+by|partition\\s+by|within\\s+group|grouping\\s+sets|nulls\\s+first|nulls\\s+last|current\\s+row|fetch\\s+first|fetch\\s+next|rows\\s+only|set\\s+of|not\\s+between\\s+symmetric|not\\s+materialized|current\\s+of|and|or|not|in|exists|between|like|ilike|is|isnull|notnull|as|from|where|join|on|having|limit|offset|union|intersect|except|distinct|all|any|some|lateral|filter|over|window|with|recursive|asc|desc|only|row|rows|preceding|following|unbounded|ties|tablesample|ordinality|verbose|analyze|explain|vacuum|notify|listen|unlisten|lock|table|share|nowait|of|to|into|do|cross|inner|left|right|full|natural|outer|range|groups|no|local|global|work|transaction|isolation|serializable|repeatable|read|committed|uncommitted|deferrable|deferred|immediate|initially|each|instead|before|after|referencing|freeze|both|leading|trailing|overlaps|at|zone|preserve|nothing|new|old|excluded|abort|reset|show|discard|checkpoint|matched|by|current|next|prior|first|last|absolute|relative|forward|backward|scroll|hold|placing|also|valid|prepare|prepared|deallocate|cycle|search|depth|breadth|cube|rollup|escape|cursor|passing|array|using|format|header|delimiter|quote|period|objects|wait|lsn|respect|ignore|symmetric|exclude|normalized|collate|overriding|source|target|stdin|stdout|program|force_quote|force_not_null|force_null|on_error|log_verbosity|write|session|characteristics|snapshot|cluster|restart|reverse|slice|off|binary|system|object|materialized|costs|settings|generic_plan|serialize|wal|timing|summary|memory|yaml|none|names|seed|disable_page_skipping|skip_locked|index_cleanup|process_main|process_toast|skip_database_stats|only_database_stats|buffer_usage_limit|buffers|json|order|group|nulls|similar|within|grouping|sets|time|skip|locked|large|nfc|nfd|nfkc|nfkd)\\b",
+      "name": "keyword.other.pgsql"
+    },
+    "language_constants": {
+      "match": "(?xi)\\b(null|true|false|unknown)\\b",
+      "name": "entity.name.label.pgsql"
+    },
+    "function_call": {
+      "comment": "Any identifier followed by ( — catches user-defined function calls",
+      "match": "(?<!(?i)\\b(?:into|copy|references|on|analyze|vacuum)\\s+(?:[a-zA-Z0-9_]+\\.)?[a-zA-Z0-9_]*)(?:[a-zA-Z_][a-zA-Z0-9_]*\\.)?([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": {
+          "name": "support.function.pgsql"
+        }
+      }
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "->>|->|#>>|#>",
+          "name": "keyword.operator.json.pgsql"
+        },
+        {
+          "match": "@>|<@|\\?\\||\\?&|\\?",
+          "name": "keyword.operator.containment.pgsql"
+        },
+        {
+          "match": "::",
+          "name": "keyword.operator.cast.pgsql"
+        },
+        {
+          "match": "~~\\*|~~|!~~\\*|!~~",
+          "name": "keyword.operator.like.pgsql"
+        },
+        {
+          "match": "~\\*|!~\\*|!~|~",
+          "name": "keyword.operator.regex.pgsql"
+        },
+        {
+          "match": "\\|\\|",
+          "name": "keyword.operator.concatenation.pgsql"
+        },
+        {
+          "match": "[!<>]?=|<>|<|>",
+          "name": "keyword.operator.comparison.pgsql"
+        },
+        {
+          "match": "-|\\+|/|%",
+          "name": "keyword.operator.math.pgsql"
+        }
+      ]
+    },
+    "schema_qualified": {
+      "comment": "Matches schema.object to prevent parts from being falsely matched as keywords",
+      "match": "[a-zA-Z_][a-zA-Z0-9_]*\\.[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    "misc": {
+      "patterns": [
+        {
+          "match": "\\b\\d+\\.\\d+\\b",
+          "name": "constant.numeric.float.pgsql"
+        },
+        {
+          "match": "\\b\\d+\\b",
+          "name": "constant.numeric.pgsql"
+        }
+      ]
+    }
+  }
+}
