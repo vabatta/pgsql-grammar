@@ -6,8 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         nodejs = pkgs.nodejs;
@@ -28,16 +34,10 @@
           buildInputs = [ nodejs ];
 
           shellHook = ''
-            export SHELL=${pkgs.zsh}/bin/zsh
-
             echo "pgsql-grammar dev shell"
             echo "  npm test            — run grammar tests"
             echo "  npm run validate    — smoke test grammar against samples"
             echo "  npm run preview     — local Shiki preview at http://localhost:3117"
-
-            if [[ $- == *i* ]]; then
-              exec $SHELL
-            fi
           '';
         };
       }
