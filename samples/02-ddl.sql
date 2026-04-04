@@ -63,6 +63,16 @@ CREATE TABLE app.orders (
 
 COMMENT ON TABLE app.orders IS 'Customer orders';
 COMMENT ON COLUMN app.orders.metadata IS 'Arbitrary JSON metadata';
+COMMENT ON TYPE order_status IS $$
+Governs the lifecycle of an order.
+
+  pending:   payment not yet confirmed.
+  confirmed: payment received, awaiting fulfilment.
+  shipped:   dispatched to carrier.
+  delivered: confirmed receipt by customer.
+  cancelled: voided before delivery.
+$$;
+COMMENT ON COLUMN app.orders.notes IS $body$Free-form notes attached to the order.$body$;
 
 -- Unlogged table
 CREATE UNLOGGED TABLE session_cache (

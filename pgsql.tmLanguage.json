@@ -23,7 +23,13 @@
       "include": "#create_other"
     },
     {
+      "include": "#do_block"
+    },
+    {
       "include": "#dml_statement"
+    },
+    {
+      "include": "#comment_on"
     },
     {
       "include": "#general_statement"
@@ -142,7 +148,7 @@
           "include": "#create_table_columns"
         },
         {
-          "include": "#dollar_quotes"
+          "include": "#dollar_quote_literal"
         },
         {
           "include": "#comments"
@@ -269,7 +275,7 @@
       "name": "meta.statement.pgsql.create",
       "patterns": [
         {
-          "include": "#dollar_quotes"
+          "include": "#dollar_quote_literal"
         },
         {
           "include": "#comments"
@@ -320,7 +326,7 @@
     },
     "dml_statement": {
       "comment": "DML statements — excludes keyword_ddl to avoid false positives on column names like data, value, mode, level",
-      "begin": "(?i)^\\s*(select|insert|update|delete|merge|with|truncate|copy|values|explain|vacuum|analyze|do|call)\\b",
+      "begin": "(?i)^\\s*(select|insert|update|delete|merge|with|truncate|copy|values|explain|vacuum|analyze|call)\\b",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.pgsql"
@@ -330,7 +336,7 @@
       "name": "meta.statement.pgsql",
       "patterns": [
         {
-          "include": "#dollar_quotes"
+          "include": "#dollar_quote_literal"
         },
         {
           "include": "#comments"
@@ -385,6 +391,48 @@
         }
       ]
     },
+    "comment_on": {
+      "comment": "COMMENT ON ... IS $$ ... $$ — value is a plain string literal, not code",
+      "begin": "(?i)^\\s*(comment)\\s+(on)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.ddl.pgsql"
+        },
+        "2": {
+          "name": "keyword.ddl.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql.comment-on",
+      "patterns": [
+        {
+          "comment": "IS keyword preceding the comment text",
+          "match": "(?i)\\b(is)\\b",
+          "name": "keyword.other.pgsql"
+        },
+        {
+          "include": "#paren_group_typed"
+        },
+        {
+          "include": "#dollar_quote_literal"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#keywords_all"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
     "general_statement": {
       "begin": "(^\\s*[a-zA-Z]+)",
       "beginCaptures": {
@@ -396,13 +444,16 @@
       "name": "meta.statement.pgsql",
       "patterns": [
         {
-          "include": "#dollar_quotes"
+          "include": "#dollar_quote_literal"
         },
         {
           "include": "#comments"
         },
         {
           "include": "#strings"
+        },
+        {
+          "include": "#paren_group_typed"
         },
         {
           "include": "#cast_function"
@@ -454,6 +505,50 @@
       },
       "end": "\\n",
       "name": "meta.statement.pgsql.psql"
+    },
+    "dollar_quote_literal": {
+      "comment": "Dollar-quoted string literal — plain string, no SQL highlighting inside",
+      "begin": "(\\$[\\w_0-9]*\\$)",
+      "beginCaptures": {
+        "1": {
+          "name": "string.unquoted.dollar.pgsql"
+        }
+      },
+      "end": "(\\1)",
+      "endCaptures": {
+        "1": {
+          "name": "string.unquoted.dollar.pgsql"
+        }
+      },
+      "name": "string.unquoted.dollar.pgsql"
+    },
+    "do_block": {
+      "comment": "DO anonymous block — dollar-quoted body is executable PL/pgSQL",
+      "begin": "(?i)^\\s*(do)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.pgsql"
+        }
+      },
+      "end": ";\\s*",
+      "name": "meta.statement.pgsql",
+      "patterns": [
+        {
+          "include": "#dollar_quotes"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#language_constants"
+        },
+        {
+          "include": "#keywords_all"
+        }
+      ]
     },
     "dollar_quotes": {
       "comment": "Dollar-quoted body — treated as SQL/PL body with syntax highlighting",
@@ -922,6 +1017,40 @@
         },
         {
           "include": "#function_call"
+        },
+        {
+          "include": "#operators"
+        },
+        {
+          "include": "#schema_qualified"
+        },
+        {
+          "include": "#misc"
+        }
+      ]
+    },
+    "paren_group_typed": {
+      "comment": "Parentheses in function/procedure/aggregate signatures — includes storage_types for parameter type lists (used in COMMENT ON, GRANT, ALTER, DROP, etc.)",
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [
+        {
+          "include": "#paren_group_typed"
+        },
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#storage_types"
+        },
+        {
+          "include": "#cast_type"
+        },
+        {
+          "include": "#keywords_all"
         },
         {
           "include": "#operators"
