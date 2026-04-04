@@ -1,5 +1,12 @@
 # Changelog
 
+## [18.0.2](https://github.com/proventuslabs/pgsql-grammar/compare/pgsql-grammar-v18.0.1...pgsql-grammar-v18.0.2) (2026-04-04)
+
+
+### Bug Fixes
+
+* constants scope, CASCADE in TRUNCATE, keyword_ddl in PL/pgSQL bodies ([#5](https://github.com/proventuslabs/pgsql-grammar/issues/5)) ([cbae1da](https://github.com/proventuslabs/pgsql-grammar/commit/cbae1da7fb60d77d006a3138c082e0dfb4250398))
+
 ## [18.0.1](https://github.com/proventuslabs/pgsql-grammar/compare/pgsql-grammar-v18.0.0...pgsql-grammar-v18.0.1) (2026-04-04)
 
 
