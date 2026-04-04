@@ -138,9 +138,10 @@ WHEN NOT MATCHED BY TARGET THEN
 WHEN NOT MATCHED BY SOURCE THEN
   DELETE;
 
--- TRUNCATE with RESTART IDENTITY
+-- TRUNCATE with CASCADE / RESTRICT
 TRUNCATE TABLE old_logs, archived_sessions;
 TRUNCATE TABLE counters RESTART IDENTITY CASCADE;
+TRUNCATE TABLE staging_data RESTRICT;
 
 -- COPY variants
 COPY users (name, email) TO '/tmp/users.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', QUOTE '"', ESCAPE '\');
@@ -288,6 +289,19 @@ SELECT * FROM accounts WHERE id = 1 FOR UPDATE OF accounts;
 -- ISNULL / NOTNULL operators
 SELECT * FROM users WHERE email ISNULL;
 SELECT * FROM users WHERE email NOTNULL;
+
+-- NULL / TRUE / FALSE as language constants
+UPDATE accounts SET worker_id = NULL, claimed_at = NULL WHERE id = 1;
+SELECT * FROM users WHERE is_active = TRUE AND is_deleted = FALSE;
+
+-- Keyword-named functions (is, similar etc.) used as function calls
+-- 'is' before '(' is a function call (e.g. pgTAP), not the IS keyword
+SELECT is(get_count(), 0, 'should be zero');
+SELECT is(
+  (SELECT was_cancelled FROM cancel_run(42)),
+  FALSE,
+  'cancel of completed run returns false'
+);
 
 -- Quoted identifiers
 SELECT "user"."first_name", "user"."last_name"
