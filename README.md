@@ -10,27 +10,25 @@ Standalone `pgsql.tmLanguage.json` targeting Shiki, VS Code, GitHub Linguist, an
 
 ## Highlighting
 
-Reference theme: **github-dark**
+Actual colors depend on your theme. The table below documents the TextMate scope assigned to each token class — themes map scopes to colors.
 
-| Token | Context | Color | Example |
+| Token | Context | Scope | Example |
 |-------|---------|-------|---------|
-| Keywords | everywhere | red | `SELECT`, `FROM`, `WHERE`, `AND`, `JOIN`, `CREATE TABLE`, `BEGIN`, `END` |
-| Operators | everywhere | red | `::`, `=`, `<>`, `\|\|`, `@>`, `->>` |
-| Built-in functions | before `(` | blue | `now()`, `count(*)`, `coalesce(a, b)` |
-| User-defined functions | before `(` | blue | `get_active_users(100)`, `app.my_func()` |
-| Numbers | everywhere | blue | `42`, `3.14` |
-| Built-in types | after `::` | green | `x::DATE`, `y::INTEGER` |
-| Built-in types | inside `CAST` | green | `CAST(y AS NUMERIC)` |
-| Built-in types | before literal | green | `INTERVAL '1 day'`, `DATE '2024-01-01'` |
-| Built-in types | DDL columns | green | `CREATE TABLE t (id SERIAL, name TEXT)` |
-| Built-in types | function signatures | green | `CREATE FUNCTION f(p_id BIGINT)` |
-| Built-in types | PL/pgSQL `DECLARE` | green | `DECLARE v_count INTEGER;` |
+| Keywords | everywhere | `keyword` | `SELECT`, `FROM`, `WHERE`, `AND`, `JOIN`, `CREATE TABLE`, `BEGIN`, `END` |
+| Operators | everywhere | `keyword.operator` | `::`, `=`, `<>`, `\|\|`, `@>`, `->>` |
+| Built-in functions | before `(` | `support.function` | `now()`, `count(*)`, `coalesce(a, b)` |
+| User-defined functions | before `(` | `entity.name.function` | `get_active_users(100)`, `app.my_func()` |
+| Numbers | everywhere | `constant.numeric` | `42`, `3.14` |
+| Built-in types | after `::`, inside `CAST`, before literal, DDL/signatures/`DECLARE` | `entity.name.tag` | `x::DATE`, `CAST(y AS NUMERIC)`, `INTERVAL '1 day'`, `id SERIAL` |
 | Built-in types | DML (bare word) | unstyled | `SELECT date, name, text FROM t` |
-| Constants | everywhere | purple | `NULL`, `TRUE`, `FALSE` |
-| `EXTRACT` fields | inside `EXTRACT()` | purple | `EXTRACT(EPOCH FROM now())` |
-| Single-quoted strings | everywhere | light blue | `'hello'`, `E'\n'` |
-| Double-quoted identifiers | everywhere | light blue | `"my_table"."column"` |
-| Comments | everywhere | grey | `-- line`, `/* block */` |
+| Constants | everywhere | `constant.language` | `NULL`, `TRUE`, `FALSE` |
+| `EXTRACT` fields | inside `EXTRACT()` | `constant.language` | `EXTRACT(EPOCH FROM now())` |
+| Single-quoted strings | everywhere | `string.quoted.single` | `'hello'`, `E'\n'` |
+| Dollar-quoted literal | `COMMENT ON … IS`, `SELECT`, `INSERT … VALUES`, `CALL` | `string.unquoted` | `$$ plain text $$`, `$body$ text $body$` |
+| Dollar-quoted body | `CREATE FUNCTION/PROCEDURE … AS`, `DO` | `meta.dollar-quote` (full SQL/PL inside) | `$$ BEGIN … END; $$` |
+| Dollar-quoted nested | inside any dollar-quoted body (e.g. `EXECUTE $$…$$`) | `meta.dollar-quote` (recursive) | `EXECUTE $q$ SELECT 1 $q$;` |
+| Double-quoted identifiers | everywhere | `variable.other` | `"my_table"."column"` |
+| Comments | everywhere | `comment` | `-- line`, `/* block */` |
 | Identifiers | DML | unstyled | `u.name`, `created_at`, `users` |
 | Table after `INTO`/`COPY` | before `(columns)` | unstyled | `INSERT INTO users (name)`, `COPY t (col)` |
 | Table after `ON`/`REFERENCES` | before `(columns)` | unstyled | `ON orders (user_id)`, `REFERENCES t(id)` |
