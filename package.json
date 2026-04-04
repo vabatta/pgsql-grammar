@@ -1,6 +1,6 @@
 {
   "name": "pgsql-grammar",
-  "version": "18.0.1",
+  "version": "18.0.2",
   "private": true,
   "description": "Standalone PostgreSQL TextMate grammar",
   "license": "MIT",
