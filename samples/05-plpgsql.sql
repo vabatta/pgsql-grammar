@@ -320,6 +320,41 @@ BEGIN
 END;
 $$;
 
+-- NULL/TRUE/FALSE as language constants inside PL/pgSQL body
+CREATE OR REPLACE FUNCTION reset_run(p_run_id BIGINT)
+RETURNS VOID LANGUAGE plpgsql AS $$
+BEGIN
+  UPDATE wf.runs
+     SET status      = 'queued',
+         worker_id   = NULL,
+         claimed_at  = NULL,
+         timeout_at  = NULL,
+         finished_at = NULL
+   WHERE id = p_run_id;
+
+  IF NOT FOUND THEN
+    RAISE WARNING 'run % not found', p_run_id;
+  END IF;
+END;
+$$;
+
+-- Column named 'output' in INSERT inside a function body
+-- (should NOT be highlighted as a DDL keyword)
+CREATE OR REPLACE FUNCTION complete_run(p_run_id BIGINT, p_output JSONB)
+RETURNS VOID LANGUAGE plpgsql AS $$
+BEGIN
+  UPDATE wf.runs
+     SET status      = 'completed',
+         output      = p_output,
+         worker_id   = NULL,
+         finished_at = now()
+   WHERE id = p_run_id;
+
+  INSERT INTO wf.ev_run_completed (run_id, output)
+  VALUES (p_run_id, p_output);
+END;
+$$;
+
 -- Trigger function with NEW/OLD references
 CREATE OR REPLACE FUNCTION audit_trigger()
 RETURNS TRIGGER

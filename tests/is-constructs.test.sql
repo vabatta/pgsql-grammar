@@ -7,29 +7,29 @@ SELECT x FROM t WHERE x IS NOT NULL;
 -- IS TRUE / IS NOT TRUE
 SELECT x FROM t WHERE b IS TRUE;
 --                      ^^ keyword
---                         ^^^^ entity.name.label
+--                         ^^^^ constant.language
 SELECT x FROM t WHERE b IS NOT TRUE;
 --                      ^^ keyword
 --                         ^^^ keyword
---                             ^^^^ entity.name.label
+--                             ^^^^ constant.language
 
 -- IS FALSE / IS NOT FALSE
 SELECT x FROM t WHERE b IS FALSE;
 --                      ^^ keyword
---                         ^^^^^ entity.name.label
+--                         ^^^^^ constant.language
 SELECT x FROM t WHERE b IS NOT FALSE;
 --                      ^^ keyword
 --                         ^^^ keyword
---                             ^^^^^ entity.name.label
+--                             ^^^^^ constant.language
 
 -- IS UNKNOWN / IS NOT UNKNOWN
 SELECT x FROM t WHERE b IS UNKNOWN;
 --                      ^^ keyword
---                         ^^^^^^^ entity.name.label
+--                         ^^^^^^^ constant.language
 SELECT x FROM t WHERE b IS NOT UNKNOWN;
 --                      ^^ keyword
 --                         ^^^ keyword
---                             ^^^^^^^ entity.name.label
+--                             ^^^^^^^ constant.language
 
 -- IS DISTINCT FROM / IS NOT DISTINCT FROM
 SELECT x FROM t WHERE a IS DISTINCT FROM b;

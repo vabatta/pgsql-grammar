@@ -39,12 +39,11 @@ Actual colors depend on your theme. The table below documents the TextMate scope
 - 100+ PostgreSQL type names with multi-word support
 - 200+ built-in functions and support constants
 - Standalone keyword fallbacks for multiline resilience
-- 415 test assertions across 20 test files
 
 ## Usage
 
 ```bash
-npm test               # run 415 grammar tests
+npm test               # run grammar tests
 npm run validate       # 0 unscoped tokens across all samples
 npm run validate-sql   # all statements parse via libpg-query
 npm run preview        # http://localhost:3117 — live preview with theme picker

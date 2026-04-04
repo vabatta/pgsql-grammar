@@ -62,3 +62,13 @@ COPY t FROM STDIN WITH (ON_ERROR stop, LOG_VERBOSITY verbose);
 -- BINARY option
 COPY t TO STDOUT WITH (FORMAT BINARY);
 --                             ^^^^^^ keyword
+
+-- CASCADE and RESTRICT in TRUNCATE (DML context)
+TRUNCATE TABLE t CASCADE;
+--               ^^^^^^^ keyword.dml
+TRUNCATE TABLE t RESTRICT;
+--               ^^^^^^^^ keyword.dml
+
+-- CASCADE should NOT be unstyled in TRUNCATE
+TRUNCATE TABLE t CASCADE;
+--               ^^^^^^^ !keyword.ddl

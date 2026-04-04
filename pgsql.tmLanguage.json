@@ -600,7 +600,13 @@
           "include": "#support_constants"
         },
         {
-          "include": "#keywords_all"
+          "include": "#keyword_dml"
+        },
+        {
+          "include": "#keyword_control"
+        },
+        {
+          "include": "#keyword_other"
         },
         {
           "include": "#language_constants"
@@ -874,7 +880,7 @@
       "patterns": [
         {
           "match": "(?xi)\\b(century|day|decade|dow|doy|epoch|hour|isodow|isoyear|julian|microseconds|millennium|milliseconds|minute|month|quarter|second|timezone_hour|timezone_minute|timezone|week|year)\\b",
-          "name": "entity.name.label.pgsql"
+          "name": "constant.language.pgsql"
         },
         {
           "include": "#paren_group"
@@ -1088,7 +1094,7 @@
       ]
     },
     "keyword_dml": {
-      "match": "(?xi)\\b(default\\s+values|on\\s+conflict|do\\s+nothing|do\\s+update|select|insert|update|delete|merge|returning|truncate|copy|values|set|matched|conflict)\\b",
+      "match": "(?xi)\\b(default\\s+values|on\\s+conflict|do\\s+nothing|do\\s+update|select|insert|update|delete|merge|returning|truncate|copy|values|set|matched|conflict|cascade|restrict)\\b",
       "name": "keyword.dml.pgsql"
     },
     "keyword_ddl": {
@@ -1105,7 +1111,7 @@
     },
     "language_constants": {
       "match": "(?xi)\\b(null|true|false|unknown)\\b",
-      "name": "entity.name.label.pgsql"
+      "name": "constant.language.pgsql"
     },
     "function_call": {
       "comment": "Any identifier followed by ( — catches user-defined function calls",
